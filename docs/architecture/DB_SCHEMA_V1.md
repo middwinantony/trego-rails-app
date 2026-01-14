@@ -269,3 +269,6 @@ Indexes
 CREATE UNIQUE INDEX index_payments_on_ride_id ON payments(ride_id);
 CREATE INDEX index_payments_on_status ON payments(status);
 CREATE INDEX index_payments_on_created_at ON payments(created_at DESC);
+
+* All foreign keys and indexes defined here are mandatory.
+* Any change requires schema version bump.
