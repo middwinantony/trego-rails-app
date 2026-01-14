@@ -143,7 +143,7 @@ vehicles
 
 Rules
 * Only users with role = driver can own vehicles
-* A driver can have multiple vehicles
+* A driver can have multiple vehicles (Subjected to change)
 * Only one active vehicle per ride
 
 4️⃣ rides (MOST IMPORTANT TABLE)
