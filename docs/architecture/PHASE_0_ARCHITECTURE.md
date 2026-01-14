@@ -21,7 +21,7 @@ Trego is a **single-city ride dispatch platform** that connects riders and drive
 
 **Locked Statement**
 
-> Trego is a single-city ride dispatch platform with fixed pricing rules.
+> Trego is a single-city ride dispatch platform with fixed pricing rules. Ride matching is system-assigned, not rider-selected.
 
 ---
 
@@ -31,6 +31,7 @@ Trego is a **single-city ride dispatch platform** that connects riders and drive
 
 * Backend: Rails API-only service
 * Clients: React (Web), React Native (Mobile – future)
+* Clients are replaceable; backend is the source of truth.
 
 **Rules**
 
@@ -68,6 +69,11 @@ Trego is a **single-city ride dispatch platform** that connects riders and drive
 **Authentication Method**
 
 * JWT (JSON Web Tokens)
+
+JWT Policy
+* Access token expiry: 24 hours
+* No refresh tokens in MVP
+* Re-login required after expiry
 
 **Token Flow**
 
@@ -119,6 +125,7 @@ Authorization: Bearer <token>
 
 * Authorization enforced in backend controllers
 * Frontend has no authority logic
+* Role escalation is not allowed without admin action.
 
 **Locked Statement**
 
@@ -159,7 +166,8 @@ cities
 * Vehicle
 * Ride
 * Payment
-* Location
+Value object (Not Standalone tables in MVP)
+* Location (lat/lang pairs stored on Ride)
 
 **Ownership Rules**
 
@@ -189,6 +197,7 @@ requested → assigned → accepted → started → completed
 * No skipping states
 * No backward transitions
 * Cancellation allowed only in specific states
+* State transitions are validated server-side and are atomic.
 
 **Locked Statement**
 
@@ -217,7 +226,7 @@ requested → assigned → accepted → started → completed
 
 **Locked Statement**
 
-> Pricing is deterministic and predictable for MVP.
+> Pricing is deterministic and predictable for MVP. Pricing is computed server-side and returned as a breakdown.
 
 ---
 
