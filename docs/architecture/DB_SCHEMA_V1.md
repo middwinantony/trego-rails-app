@@ -252,3 +252,20 @@ Why
 * Driver dashboard queries
 * Matching open rides
 * Admin monitoring
+
+
+5️⃣ payments
+Foreign Keys
+ALTER TABLE payments
+ADD CONSTRAINT fk_payments_ride
+FOREIGN KEY (ride_id)
+REFERENCES rides(id)
+ON DELETE RESTRICT;
+
+Why
+* Financial records must never disappear
+
+Indexes
+CREATE UNIQUE INDEX index_payments_on_ride_id ON payments(ride_id);
+CREATE INDEX index_payments_on_status ON payments(status);
+CREATE INDEX index_payments_on_created_at ON payments(created_at DESC);
