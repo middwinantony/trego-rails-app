@@ -151,3 +151,104 @@ Indexes
 Why
 * Name lookup during config
 * Active flag for future city toggles
+
+
+2️⃣ users
+Foreign Keys
+ALTER TABLE users
+ADD CONSTRAINT fk_users_city
+FOREIGN KEY (city_id)
+REFERENCES cities(id)
+ON DELETE RESTRICT;
+
+Why
+* Users must belong to a valid city
+* Prevent accidental city deletion
+
+Indexes
+CREATE UNIQUE INDEX index_users_on_phone ON users(phone);
+CREATE UNIQUE INDEX index_users_on_email ON users(email);
+CREATE INDEX index_users_on_role ON users(role);
+CREATE INDEX index_users_on_status ON users(status);
+CREATE INDEX index_users_on_city_id ON users(city_id);
+
+Optional Partial Index (Performance Boost)
+CREATE INDEX index_active_drivers
+ON users(id)
+WHERE role = 1 AND status = 0;
+
+Why
+* Driver matching queries become faster
+* Avoids scanning riders/admins
+
+
+3️⃣ vehicles
+Foreign Keys
+ALTER TABLE vehicles
+ADD CONSTRAINT fk_vehicles_driver
+FOREIGN KEY (driver_id)
+REFERENCES users(id)
+ON DELETE CASCADE;
+
+Why
+* If driver is removed, vehicle must go
+* Prevent orphan vehicles
+
+Indexes
+CREATE INDEX index_vehicles_on_driver_id ON vehicles(driver_id);
+CREATE UNIQUE INDEX index_vehicles_on_plate_number ON vehicles(plate_number);
+CREATE INDEX index_vehicles_on_active ON vehicles(active);
+
+
+4️⃣ rides (MOST IMPORTANT TABLE)
+Foreign Keys
+ALTER TABLE rides
+ADD CONSTRAINT fk_rides_rider
+FOREIGN KEY (rider_id)
+REFERENCES users(id)
+ON DELETE RESTRICT;
+
+ALTER TABLE rides
+ADD CONSTRAINT fk_rides_driver
+FOREIGN KEY (driver_id)
+REFERENCES users(id)
+ON DELETE SET NULL;
+
+ALTER TABLE rides
+ADD CONSTRAINT fk_rides_vehicle
+FOREIGN KEY (vehicle_id)
+REFERENCES vehicles(id)
+ON DELETE SET NULL;
+
+ALTER TABLE rides
+ADD CONSTRAINT fk_rides_city
+FOREIGN KEY (city_id)
+REFERENCES cities(id)
+ON DELETE RESTRICT;
+
+Why These Rules Matter
+Relation	            Rule	                 Reason
+rider	              RESTRICT	          Legal & audit trail
+driver	            SET NULL	         Driver may leave platform
+vehicle	            SET NULL	         Vehicle can be replaced
+city	              RESTRICT	               Core domain
+
+Indexes (Critical)
+CREATE INDEX index_rides_on_rider_id ON rides(rider_id);
+CREATE INDEX index_rides_on_driver_id ON rides(driver_id);
+CREATE INDEX index_rides_on_vehicle_id ON rides(vehicle_id);
+CREATE INDEX index_rides_on_city_id ON rides(city_id);
+CREATE INDEX index_rides_on_status ON rides(status);
+CREATE INDEX index_rides_on_created_at ON rides(created_at DESC);
+
+Composite Indexes (High-Value)
+CREATE INDEX index_rides_driver_status
+ON rides(driver_id, status);
+
+CREATE INDEX index_rides_city_status
+ON rides(city_id, status);
+
+Why
+* Driver dashboard queries
+* Matching open rides
+* Admin monitoring
