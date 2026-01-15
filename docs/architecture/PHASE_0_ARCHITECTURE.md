@@ -70,10 +70,10 @@ Trego is a **single-city ride dispatch platform** that connects riders and drive
 
 * JWT (JSON Web Tokens)
 
-JWT Policy
+JWT Policy (Phase 1 Defaults)
 * Access token expiry: 24 hours
 * No refresh tokens in MVP
-* Re-login required after expiry
+* Subject to revision in future phases
 
 **Token Flow**
 
@@ -167,7 +167,10 @@ cities
 * Ride
 * Payment
 Value object (Not Standalone tables in MVP)
-* Location (lat/lang pairs stored on Ride)
+* Location (lat/lng pairs stored on Ride)
+
+Locked Statement:
+> Location is a value object embedded in Ride records for MVP.
 
 **Ownership Rules**
 
@@ -198,6 +201,8 @@ requested → assigned → accepted → started → completed
 * No backward transitions
 * Cancellation allowed only in specific states
 * State transitions are validated server-side and are atomic.
+* Only the backend can authorize and execute ride state transitions.
+* Clients may request transitions but cannot enforce them.
 
 **Locked Statement**
 
@@ -292,3 +297,6 @@ No code is written before this document is approved.
 ---
 
 **Status:** LOCKED
+
+This document is frozen as of Phase 0.
+Any change requires a written justification and version bump.
