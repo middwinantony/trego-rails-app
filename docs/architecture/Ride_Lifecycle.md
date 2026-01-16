@@ -57,186 +57,129 @@ All other transitions are invalid.
 6. Who Can Trigger Which Transitions
 Rider
 A rider can:
-Create a ride (requested)
-
-Cancel a ride before started
+* Create a ride (requested)
+* Cancel a ride before started
 
 A rider cannot:
-
-Assign drivers
-
-Accept rides
-
-Start or complete rides
-
-Cancel after ride has started
+* Assign drivers
+* Accept rides
+* Start or complete rides
+* Cancel after ride has started
 
 Driver
-
 A driver can:
-
-Accept a ride (assigned → accepted)
-
-Start a ride (accepted → started)
-
-Complete a ride (started → completed)
+* Accept a ride (assigned → accepted)
+* Start a ride (accepted → started)
+* Complete a ride (started → completed)
 
 A driver cannot:
-
-Cancel rides (Phase 1)
-
-Skip states
-
-Accept unassigned rides
+* Cancel rides (Phase 1)
+* Skip states
+* Accept unassigned rides
 
 System (Backend)
-
 The system can:
-
-Assign a driver (requested → assigned)
-
-Cancel rides due to timeout or errors
+* Assign a driver (requested → assigned)
+* Cancel rides due to timeout or errors
 
 System actions are logged and auditable.
 
 7. Cancellation Rules
 Allowed Cancellation States
-
 Cancellation is allowed only in:
-
-requested
-
-assigned
-
-accepted
+* requested
+* assigned
+* accepted
 
 Cancellation is not allowed in:
-
-started
-
-completed
+* started
+* completed
 
 Cancellation Effects
-
 When a ride is cancelled:
-
-Final state becomes cancelled
-
-No further transitions allowed
-
-Cancellation reason is recorded
-
-Timestamps are preserved
+* Final state becomes cancelled
+* No further transitions allowed
+* Cancellation reason is recorded
+* Timestamps are preserved
 
 8. State Immutability
-
 Once a ride reaches:
-
-completed
-
-cancelled
+* completed
+* cancelled
 
 It becomes immutable.
 
 No edits allowed to:
-
-State
-
-Driver
-
-Rider
-
-Vehicle
-
-Pricing
+* State
+* Driver
+* Rider
+* Vehicle
+* Pricing
 
 This ensures auditability.
 
 9. Validation & Enforcement
 Server-Side Enforcement
-
-All state transitions validated server-side
-
-No trust in frontend input
-
-Invalid transitions return 422 Unprocessable Entity
+* All state transitions validated server-side
+* No trust in frontend input
+* Invalid transitions return 422 Unprocessable Entity
 
 Example rule:
-
 A ride in requested cannot be marked as started.
 
 10. Concurrency & Atomicity
-
 State transitions must be:
-
-Atomic
-
-Transactional
-
-Race-condition safe
+* Atomic
+* Transactional
+* Race-condition safe
 
 The backend must ensure:
-
-A ride is accepted by only one driver
-
-No double assignment
-
-No duplicate starts or completions
+* A ride is accepted by only one driver
+* No double assignment
+* No duplicate starts or completions
 
 11. Timestamps (Required)
-
 Each transition records a timestamp:
-
-Field	Description
-requested_at	When ride was created
-assigned_at	When driver assigned
-accepted_at	When driver accepted
-started_at	When ride started
-completed_at	When ride completed
-cancelled_at	When ride cancelled
+Field	              Description
+requested_at	   When ride was created
+assigned_at	     When driver assigned
+accepted_at	     When driver accepted
+started_at	     When ride started
+completed_at	   When ride completed
+cancelled_at	   When ride cancelled
 
 Only one terminal timestamp exists per ride.
 
 12. Ownership Enforcement
-
 At every transition:
-
-Rider must own the ride
-
-Driver must be the assigned driver
-
-Admin/system actions must be authorized
+* Rider must own the ride
+* Driver must be the assigned driver
+* Admin/system actions must be authorized
 
 Ownership is always verified server-side.
 
 13. API Error Behavior
-Condition	HTTP Status
-Invalid state transition	422
-Unauthorized role	403
-Wrong owner	403
-Ride not found	404
+Condition	                    HTTP Status
+Invalid state transition	        422
+Unauthorized role	                403
+Wrong owner	                      403
+Ride not found	                  404
 
 Error messages are generic.
 
 14. Future Extensions (Not Phase 1)
 
 Explicitly excluded for now:
-
-Pause / resume
-
-Multi-stop rides
-
-Driver cancellation
-
-Rider ratings
-
-Refund flows
-
-Dispute states
+* Pause / resume
+* Multi-stop rides
+* Driver cancellation
+* Rider ratings
+* Refund flows
+* Dispute states
 
 Any extension requires updating this document.
 
 15. Locked Statement
 
-Ride state transitions in Trego are strictly enforced, immutable, and validated exclusively by the backend.
-No ride may skip or reverse states.
+* Ride state transitions in Trego are strictly enforced, immutable, and validated exclusively by the backend.
+* No ride may skip or reverse states.
