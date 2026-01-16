@@ -252,6 +252,12 @@ The following features are explicitly excluded from Phase 1:
 
 > Features not listed are intentionally excluded.
 
+🔒 Explicit Phase 1 Exclusion — Driver Subscriptions
+
+> Driver subscription billing is intentionally excluded from Phase 1.
+> Phase 1 validates dispatch, lifecycle, and unit economics without monetization logic.
+> Subscription models will be introduced in Phase 2 after usage data is available.
+
 ---
 
 ## 11. API Structure & Versioning
