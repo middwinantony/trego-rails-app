@@ -1,4 +1,37 @@
 Rails.application.routes.draw do
+  # API-only application.
+  # All routes must live under /api/v1.
+  # Do NOT add non-versioned routes.
+  namespace :api do
+    namespace :v1 do
+      # Authentication
+      post "auth/signup", to: "auth#signup"
+      post "auth/login", to: "auth#login"
+
+      # Users
+      resouces :users, only: [:show]
+
+      # Rides (Rider-facing)
+      resources :rides, only: [:create, :show] do
+        member do
+          patch :accept
+          patch :start
+          patch :complete
+          patch :cancel
+        end
+      end
+
+      # admin
+      namespace :admin do
+        get 'stats/index', to: 'stats#index'
+      end
+
+      # driver specific
+      namespace :driver do
+        resources :rides, only: [:index]
+      end
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
