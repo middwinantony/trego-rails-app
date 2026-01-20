@@ -21,13 +21,15 @@ Purpose
 
 Table: users
 Column	            Type	           Constraints	      Default	      Notes
-id	               bigint	                PK	            auto
-email	           varchar(255)	          UNIQUE		               Optional for drivers
+id	               bigint	                PK	            auto      Future-proof
 phone	           varchar(20)	      UNIQUE, NOT NULL		          Primary identity
-password_digest	 varchar(255)	         NOT NULL		                     bcrypt
+password_digest	 varchar(255)	         NOT NULL		               bcrypt, has_secure_password
 role	             integer	           NOT NULL		                      enum
-status	           integer	           NOT NULL	           0	          enum
+status	           integer	   NOT NULL, default:active	     0	        enum
 city_id	           bigint	          FK → cities(id)
+first_name         string              Nullable                        Optional
+last_name          string              Nullable                        Optional
+email	           varchar(255)	          Nullable		              Optional, Non unique
 created_at	      timestamp	           NOT NULL	         now()
 updated_at	      timestamp	           NOT NULL	         now()
 
@@ -41,6 +43,9 @@ Indexes
 * index_users_on_role
 * index_users_on_city_id
 
+* Auth = Identity
+* Role = Permission
+* Status = System gate
 
 
 3️⃣ vehicles
