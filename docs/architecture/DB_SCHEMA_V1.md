@@ -39,13 +39,18 @@ Enums
 
 Indexes
 * index_users_on_phone
-* index_users_on_email
 * index_users_on_role
 * index_users_on_city_id
 
 * Auth = Identity
 * Role = Permission
 * Status = System gate
+
+### Users – Identity Decision (LOCKED)
+
+Phone number is the primary and only required user identifier.
+Email is optional and non-unique.
+All authentication flows are phone-based.
 
 
 3️⃣ vehicles
