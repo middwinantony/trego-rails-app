@@ -9,10 +9,10 @@ Rails.application.routes.draw do
       post "auth/login", to: "auth#login"
 
       # Users
-      resouces :users, only: [:show]
+      resources :users, only: [:show]
 
       # Rides (Rider-facing)
-      resources :rides, only: [:create, :show] do
+      resources :rides, only: %i[create show] do
         member do
           patch :accept
           patch :start
