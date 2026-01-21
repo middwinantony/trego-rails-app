@@ -1,5 +1,13 @@
 class User < ApplicationRecord
-  has_secure_password
+  include Devise::JWT::RevocationStrategies::JTIMatcher
+
+  before_create :set_jti
+
+  devise :database_authenticatable,
+         :registerable,
+         :validatable,
+         :jwt_authenticatable,
+         jwt_revocation_strategy: self
 
   enum role: {
     rider: 0,
@@ -13,7 +21,12 @@ class User < ApplicationRecord
   }
 
   validates :phone, presence: true, uniqueness: true
-  validates :password_digest, presence: true
   validates :role, presence: true
   validates :status, presence: true
+
+  private
+
+  def set_jti
+    self.jti ||= SecureRandom.uuid
+  end
 end
