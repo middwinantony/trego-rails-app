@@ -1,2 +1,57 @@
 class Api::V1::AuthController < ApplicationController
+  skip_before_action :authenticate_request, only: [:signup, :login]
+
+  def signup
+    user = User.new(user_params)
+
+    if user.save
+      token = JwtService.encode(
+        user_id: user.id,
+        role: user.role
+      )
+
+      render json: {
+        token: token,
+        user: user_response(user)
+      }, status: :unprocessable_entity
+    end
+  end
+
+  def login
+    user = User.find_by(phone: params[:phone])
+
+    if user&.authenticate(params[:password])
+      token = JwtService.encode(
+        user_id: user.id,
+        role: user.role
+      )
+
+      render json: {
+        token: token,
+        user: user_response(user)
+      }, status: :ok
+    else
+      render json: {
+        error: "Unauthorized",
+        message: "Invalid phone or password"
+      }, status: :Unauthorized
+    end
+  end
+
+  private
+
+  def user_params
+    params.permit(:phone, :password)
+  end
+
+  def user_response(user)
+    {
+      id: user.id,
+      phone: user.phone,
+      role: user.role,
+      status: user.status,
+      created_at: user.created_at,
+      updated_at: user.updated_at
+    }
+  end
 end
