@@ -5,8 +5,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Authentication
-      post "auth/signup", to: "auth#signup"
-      post "auth/login", to: "auth#login"
+      namespace :auth do
+        post :signup
+        post :login
+      end
+      # post "auth/signup", to: "auth#signup"
+      # post "auth/login", to: "auth#login"
 
       # Users
       resouces :users, only: [:show]
