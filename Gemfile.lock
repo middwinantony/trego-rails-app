@@ -171,6 +171,7 @@ GEM
     nokogiri (1.19.0-x86_64-linux-musl)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    ostruct (0.6.3)
     pg (1.6.3)
     pg (1.6.3-aarch64-linux)
     pg (1.6.3-aarch64-linux-musl)
@@ -277,6 +278,7 @@ DEPENDENCIES
   debug
   devise
   devise-jwt
+  ostruct
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
