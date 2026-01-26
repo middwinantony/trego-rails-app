@@ -5,6 +5,9 @@ class ApplicationController < ActionController::API
 
   private
 
+  # -------------------------
+  # Authentication
+  # -------------------------
   def authenticate_request
     token = bearer_token
     payload = JwtService.decode(token)
@@ -27,10 +30,39 @@ class ApplicationController < ActionController::API
     header.split(' ').last
   end
 
+  # -------------------------
+  # Authorization Guards
+  # -------------------------
+  def authorize_user!
+    render_forbidden("Access denied") and return unless current_user
+  end
+
+  def authorize_rider!
+    render_forbidden("Rider access only") and return unless current_user&.role == "rider"
+  end
+
+  def authorize_driver!
+    render_forbidden("Driver access only") and return unless current_user&.role == "driver"
+  end
+
+  def authorize_admin!
+    render_forbidden("Admin access only") and return unless current_user&.role == "admin"
+  end
+
+  # -------------------------
+  # Error Helpers
+  # -------------------------
   def render_unauthorized(message)
     render json: {
       error: "Unauthorized",
       message: message
     }, status: :unauthorized
+  end
+
+  def render_forbidden(message)
+    render json: {
+      error: "Forbidden",
+      message: message
+    }, status: :forbidden
   end
 end
