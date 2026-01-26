@@ -61,8 +61,8 @@ POST /api/v1/auth/login
 
 5. JWT Structure
 
-* Authentication uses phone number + password.
-* Phone number is the primary user identifier and must be unique.
+* Authentication uses email + password.
+* email + password is the primary user identifier and must be unique.
 
 Token Payload (Minimum)
 {

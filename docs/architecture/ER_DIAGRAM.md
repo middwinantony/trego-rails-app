@@ -21,7 +21,6 @@ erDiagram
     USERS {
         bigint id PK
         string email
-        string phone
         string password_digest
         enum role
         enum status
@@ -116,7 +115,6 @@ Notes
 users
 - id (PK)
 - email (string, unique, indexed)
-- phone (string, unique)
 - password_digest (string)
 - role (enum: rider, driver, admin)
 - status (enum: active, suspended)
