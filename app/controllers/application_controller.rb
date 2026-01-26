@@ -33,4 +33,25 @@ class ApplicationController < ActionController::API
       message: message
     }, status: :unauthorized
   end
+
+  # Generic guard
+  def auhtorize_user!
+    render_forbidden("Access denied") unless current_user
+  end
+
+  # Role-specific guards
+  def authorize_rider!
+    return if current_user&.role == "rider"
+    render_forbidden("Rider access only")
+  end
+
+  def authorize_driver!
+    return if current_user&.role == "driver"
+    render_forbidden("Driver access only")
+  end
+
+  def authorize_admin!
+    return if current_user&.role == "admin"
+    render_forbidden("Admin access only")
+  end
 end
