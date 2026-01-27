@@ -20,7 +20,6 @@ class User < ApplicationRecord
     suspended: 1
   }
 
-  validates :password_digest, presence: true
   validates :role, presence: true
   validates :status, presence: true
 
