@@ -13,12 +13,12 @@ class Api::V1::AuthController < ApplicationController
       render json: {
         token: token,
         user: user_response(user)
-      }, status: :unprocessable_entity
+      }, status: :created
     end
   end
 
   def login
-    user = User.find_by(phone: params[:phone])
+    user = User.find_by(email: params[:email])
 
     if user&.authenticate(params[:password])
       token = JwtService.encode(
@@ -33,21 +33,21 @@ class Api::V1::AuthController < ApplicationController
     else
       render json: {
         error: "Unauthorized",
-        message: "Invalid phone or password"
-      }, status: :Unauthorized
+        message: "Invalid email or password"
+      }, status: :unauthorized
     end
   end
 
   private
 
   def user_params
-    params.permit(:phone, :password)
+    params.permit(:email, :password, :role)
   end
 
   def user_response(user)
     {
       id: user.id,
-      phone: user.phone,
+      phone: user.email,
       role: user.role,
       status: user.status,
       created_at: user.created_at,

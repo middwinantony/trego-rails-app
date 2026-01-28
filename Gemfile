@@ -36,7 +36,7 @@ gem "bootsnap", require: false
 # gem "rack-cors"
 
 gem 'devise'
-gem 'devise-jwt'
+gem 'jwt'
 gem 'rack-cors'
 gem "ostruct"
 

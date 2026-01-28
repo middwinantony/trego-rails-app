@@ -4,7 +4,8 @@ class Api::V1::Driver::RidesController < ApplicationController
 
   def index
     # driver views available rides
-    render json: { message: "Available rides"}
+    rides = Ride.where(status: :requested)
+    render json: rides
   end
 
   def accept
