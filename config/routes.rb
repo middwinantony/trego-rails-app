@@ -34,6 +34,9 @@ Rails.application.routes.draw do
       namespace :driver do
         resources :rides, only: [:index]
       end
+
+      get "/rides/available", to: "driver/rides#index"
+      post "/rides/:id/accept", to: "driver/rides#accept"
     end
   end
   ##
