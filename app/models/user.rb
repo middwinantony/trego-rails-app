@@ -5,6 +5,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable,
          :registerable,
+         :recoverable,
          :validatable,
          :jwt_authenticatable,
          jwt_revocation_strategy: self
@@ -20,7 +21,6 @@ class User < ApplicationRecord
     suspended: 1
   }
 
-  validates :phone, presence: true, uniqueness: true
   validates :role, presence: true
   validates :status, presence: true
 
