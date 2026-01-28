@@ -22,14 +22,13 @@ Purpose
 Table: users
 Column	            Type	           Constraints	      Default	      Notes
 id	               bigint	                PK	            auto      Future-proof
-phone	           varchar(20)	      UNIQUE, NOT NULL		          Primary identity
+email	           varchar(255)	          Nullable		              Primary identity, unique
 password_digest	 varchar(255)	         NOT NULL		               bcrypt, has_secure_password
 role	             integer	           NOT NULL		                      enum
 status	           integer	   NOT NULL, default:active	     0	        enum
 city_id	           bigint	          FK → cities(id)
 first_name         string              Nullable                        Optional
 last_name          string              Nullable                        Optional
-email	           varchar(255)	          Nullable		              Optional, Non unique
 created_at	      timestamp	           NOT NULL	         now()
 updated_at	      timestamp	           NOT NULL	         now()
 
@@ -38,7 +37,7 @@ Enums
 * status: { active: 0, suspended: 1 }
 
 Indexes
-* index_users_on_phone
+* index_users_on_email
 * index_users_on_role
 * index_users_on_city_id
 
@@ -48,9 +47,9 @@ Indexes
 
 ### Users – Identity Decision (LOCKED)
 
-Phone number is the primary and only required user identifier.
-Email is optional and non-unique.
-All authentication flows are phone-based.
+Email and Password is the primary and only required user identifier.
+Email is  not optional and unique.
+All authentication flows are email-based.
 
 
 3️⃣ vehicles
@@ -176,7 +175,6 @@ Why
 * Prevent accidental city deletion
 
 Indexes
-CREATE UNIQUE INDEX index_users_on_phone ON users(phone);
 CREATE UNIQUE INDEX index_users_on_email ON users(email);
 CREATE INDEX index_users_on_role ON users(role);
 CREATE INDEX index_users_on_status ON users(status);

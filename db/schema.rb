@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_01_21_233849) do
+ActiveRecord::Schema[7.1].define(version: 2026_01_28_224657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,22 +27,27 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_21_233849) do
   create_table "rides", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "rider_id", null: false
+    t.bigint "driver_id"
+    t.integer "status", default: 0, null: false
+    t.datetime "accepted_at"
+    t.datetime "completed_at"
+    t.datetime "cancelled_at"
+    t.index ["driver_id"], name: "index_rides_on_driver_id"
+    t.index ["rider_id"], name: "index_rides_on_rider_id"
+    t.index ["status"], name: "index_rides_on_status"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.integer "role"
-    t.string "phone", null: false
     t.integer "status"
     t.string "first_name"
     t.string "last_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "jti"
     t.string "encrypted_password", default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["jti"], name: "index_users_on_jti", unique: true
-    t.index ["phone"], name: "index_users_on_phone", unique: true
   end
 
   create_table "vehicles", force: :cascade do |t|
@@ -50,4 +55,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_21_233849) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "rides", "users", column: "driver_id"
+  add_foreign_key "rides", "users", column: "rider_id"
 end
