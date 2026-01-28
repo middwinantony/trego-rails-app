@@ -36,7 +36,7 @@ class Api::V1::RidesController < ApplicationController
       status: [:requested, :assigned, :accepted, :started]
     ).exists?
 
-    if active_ride?
+    if active_ride
       render json: { errors: "You already have an active ride" }, status: :unprocessable_entity
     end
   end
