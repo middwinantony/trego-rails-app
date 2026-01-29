@@ -47,7 +47,7 @@ class Api::V1::AuthController < ApplicationController
   def user_response(user)
     {
       id: user.id,
-      phone: user.email,
+      email: user.email,
       role: user.role,
       status: user.status,
       created_at: user.created_at,
