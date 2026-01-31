@@ -22,26 +22,23 @@ class RideLifecycleService
 
   def start!
     ensure_driver!
+    ensure_driver_owns_ride!
+
 
     @ride.with_lock do
       ensure_state!(:assigned)
-
       @ride.update!(status: :started)
     end
-
-    @ride
   end
 
   def complete!
     ensure_driver!
+    ensure_driver_owns_ride!
 
     @ride.with_lock do
       ensure_state!(:started)
-
       @ride.update!(status: :completed)
     end
-
-    @ride
   end
 
   # RIDER ACTIONS
@@ -73,5 +70,9 @@ class RideLifecycleService
 
   def ensure_state_in!(allowed)
     raise StandardError, "Invalid state transition" unless allowed.include?(@ride.status.to_sym)
+  end
+
+  def ensure_driver_owns_ride
+    raise StandardError, "Not your ride" unless @ride.driver_id == @actor.id
   end
 end

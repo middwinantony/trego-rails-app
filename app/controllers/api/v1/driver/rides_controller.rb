@@ -12,8 +12,25 @@ class Api::V1::Driver::RidesController < ApplicationController
     ride = Ride.find(params[:id])
 
     RideLifecycleService.new(ride, current_user).accept!
+    render json: ride, status: :ok
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
 
-    render json: ride
+  def start
+    ride = Ride.find(params[:id])
+
+    RideLifecycleService.new(ride, current_user).start!
+    render json: ride, status: :ok
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  def complete
+    ride = Ride.find(params[:id])
+
+    RideLifecycleService.new(ride, current_user).complete!
+    render json: ride, status: :ok
   rescue StandardError => e
     render json: { error: e.message }, status: :unprocessable_entity
   end

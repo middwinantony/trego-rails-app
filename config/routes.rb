@@ -32,7 +32,13 @@ Rails.application.routes.draw do
 
       # driver specific
       namespace :driver do
-        resources :rides, only: [:index]
+        resources :rides, only: [:index] do
+          member do
+            post :accept
+            post :start
+            post :complete
+          end
+        end
       end
 
       get "/rides/available", to: "driver/rides#index"

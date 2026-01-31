@@ -25,7 +25,14 @@ class Api::V1::RidesController < ApplicationController
 
   def show
     ride = Ride.find(params[:id])
-    render json: ride
+
+    authorize_ride_access!(ride)
+
+    render json: RideSerializer.new(ride, current_user).as_json
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Not found" }, status: :not_found
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unauthorized
   end
 
   private
@@ -51,5 +58,13 @@ class Api::V1::RidesController < ApplicationController
 
   def ride_params
     params.require(:ride).permit(:pickup_location, :dropoff_location)
+  end
+
+  def authorize_ride_access!(ride)
+    return if current_user.admin?
+    return if current_user.rider? && ride.rider_id == current_user.id
+    return if current_user.driver? && ride.driver_id == current_user.id
+
+    raise StandardError, "Unauthorized"
   end
 end
