@@ -27,7 +27,8 @@ Rails.application.routes.draw do
 
       # admin
       namespace :admin do
-        get 'stats/index', to: 'stats#index'
+        resources :rides, only: :index
+        resources :users, only: :index
       end
 
       # driver specific
