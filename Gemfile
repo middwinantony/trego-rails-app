@@ -39,6 +39,13 @@ gem 'devise'
 gem 'jwt'
 gem 'rack-cors'
 gem "ostruct"
+gem 'kaminari'
+gem 'rack-attack'
+
+# Background jobs and caching
+gem 'redis', '~> 5.0'
+gem 'sidekiq', '~> 7.0'
+gem 'sidekiq-scheduler'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

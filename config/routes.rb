@@ -1,4 +1,12 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  # Sidekiq Web UI (protected - requires admin authentication in production)
+  # TODO: Add authentication before deploying to production
+  # authenticate :user, lambda { |u| u.admin? } do
+  mount Sidekiq::Web => '/sidekiq'
+  # end
+
   # API-only application.
   # All routes must live under /api/v1.
   # Do NOT add non-versioned routes.
@@ -8,6 +16,7 @@ Rails.application.routes.draw do
       namespace :auth do
         post :signup
         post :login
+        post :logout
       end
       # post "auth/signup", to: "auth#signup"
       # post "auth/login", to: "auth#login"
@@ -27,12 +36,24 @@ Rails.application.routes.draw do
 
       # admin
       namespace :admin do
-        get 'stats/index', to: 'stats#index'
+        resources :rides, only: :index do
+          member do
+            post :force_cancel
+          end
+        end
+        resources :users, only: [:index, :show, :update]
       end
 
       # driver specific
       namespace :driver do
-        resources :rides, only: [:index]
+        resources :rides, only: [:index] do
+          member do
+            post :accept
+            post :start
+            post :complete
+            post :cancel
+          end
+        end
       end
 
       get "/rides/available", to: "driver/rides#index"

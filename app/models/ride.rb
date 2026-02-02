@@ -10,6 +10,8 @@ class Ride < ApplicationRecord
 
   belongs_to :rider, class_name: "User"
   belongs_to :driver, class_name: "User", optional: true
+  belongs_to :city, optional: true
+  belongs_to :vehicle, optional: true
   VALID_TRANSITIONS = {
     requested: %i[assigned cancelled],
     assigned: %i[accepted cancelled],
@@ -20,7 +22,7 @@ class Ride < ApplicationRecord
   }.freeze
 
   validates :driver_id, presence: true, if: :driver_required?
-  validates :status_transition_is_valid, if: :will_save_change_to_status?
+  validate :status_transition_is_valid, if: :will_save_change_to_status?
 
   before_update :set_lifecycle_timestamps
 
@@ -43,8 +45,6 @@ class Ride < ApplicationRecord
   def can_cancel?
     requested? || assigned? || accepted? || started?
   end
-
-  belongs_to :vehicle, optional: true
 
   private
 

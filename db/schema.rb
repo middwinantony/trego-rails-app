@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_01_28_224657) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_02_122549) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +33,13 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_28_224657) do
     t.datetime "accepted_at"
     t.datetime "completed_at"
     t.datetime "cancelled_at"
+    t.string "pickup_location"
+    t.string "dropoff_location"
+    t.datetime "assigned_at"
+    t.datetime "started_at"
+    t.bigint "city_id"
+    t.string "cancelled_by"
+    t.index ["city_id"], name: "index_rides_on_city_id"
     t.index ["driver_id"], name: "index_rides_on_driver_id"
     t.index ["rider_id"], name: "index_rides_on_rider_id"
     t.index ["status"], name: "index_rides_on_status"
@@ -47,14 +54,25 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_28_224657) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: "", null: false
+    t.bigint "city_id"
+    t.index ["city_id"], name: "index_users_on_city_id"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   create_table "vehicles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "make"
+    t.string "model"
+    t.integer "year"
+    t.string "plate_number"
+    t.bigint "driver_id"
+    t.boolean "active"
   end
 
+  add_foreign_key "rides", "cities", name: "fk_rails_rides_city_id"
   add_foreign_key "rides", "users", column: "driver_id"
   add_foreign_key "rides", "users", column: "rider_id"
+  add_foreign_key "users", "cities", name: "fk_rails_users_city_id"
+  add_foreign_key "vehicles", "users", column: "driver_id", name: "fk_rails_vehicles_driver_id"
 end
