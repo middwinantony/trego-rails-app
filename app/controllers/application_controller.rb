@@ -40,12 +40,14 @@ class ApplicationController < ActionController::API
   def authorize_rider!
     unless current_user.rider?
       render json: { errors: "Rider access only" }, status: :forbidden
+      return
     end
   end
 
   def authorize_driver!
     unless current_user.driver?
       render json: { errors: "Driver access only" }, status: :forbidden
+      return
     end
   end
 

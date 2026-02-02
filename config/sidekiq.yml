@@ -1,0 +1,11 @@
+:concurrency: 5
+:queues:
+  - default
+  - mailers
+
+# Sidekiq Scheduler Configuration
+:schedule:
+  ride_timeout_job:
+    cron: '*/5 * * * *'  # Every 5 minutes
+    class: RideTimeoutJob
+    description: "Auto-cancel rides that haven't been accepted after 10 minutes"

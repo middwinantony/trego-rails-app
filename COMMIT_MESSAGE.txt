@@ -1,0 +1,33 @@
+Fix critical security vulnerabilities and complete database schema
+
+CRITICAL SECURITY FIXES:
+- Fix privilege escalation in user signup (removed :role from params)
+- Fix authorization bypass in rides show action (use @ride from before_action)
+- Add missing return statements after renders in authorization guards
+- Restrict CORS to ENV-based origins (no longer allows all origins)
+- Add password validation (min 8 chars, uppercase, lowercase, digit required)
+
+DATABASE SCHEMA FIXES:
+- Add location columns (pickup_location, dropoff_location) to rides
+- Add timestamp columns (assigned_at, started_at) to rides
+- Add city_id foreign keys to rides and users tables
+- Implement vehicles table schema (make, model, year, plate_number, driver_id)
+- Add model associations for User, Ride, Vehicle, and City models
+
+MISSING CONTROLLERS:
+- Create Admin::RidesController with index action and pagination
+- Create UsersController with show action and authorization
+- Complete Admin::UsersController with index, show, and update actions
+- Add update route for admin users management
+
+DEPENDENCIES:
+- Add Kaminari gem for pagination support
+
+FIXES:
+- Fix Ride model validation (change validates to validate for custom validation)
+
+This commit addresses all critical security issues and completes the
+foundation for the ride-sharing application. The app is now ready for
+advanced features like background jobs, Redis caching, and payments.
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
