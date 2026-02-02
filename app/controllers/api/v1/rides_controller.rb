@@ -1,7 +1,7 @@
 class Api::V1::RidesController < ApplicationController
   before_action :authenticate_request
   before_action :authorize_rider!, only: [:create]
-  before_action :set_ride, only: [:show]
+  before_action :set_ride, only: [:show, :cancel]
 
   def create
     prevent_multiple_active_rides!
@@ -24,15 +24,23 @@ class Api::V1::RidesController < ApplicationController
   end
 
   def show
-    ride = Ride.find(params[:id])
+    authorize_ride_access!(@ride)
 
-    authorize_ride_access!(ride)
-
-    render json: RideSerializer.new(ride, current_user).as_json
+    render json: RideSerializer.new(@ride, current_user).as_json
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Not found" }, status: :not_found
   rescue StandardError => e
     render json: { error: e.message }, status: :unauthorized
+  end
+
+  def cancel
+    RideLifecycleService.new(@ride, current_user).cancel!
+    render json: {
+      message: "Ride cancelled successfully",
+      ride: RideSerializer.new(@ride.reload, current_user).as_json
+    }
+  rescue StandardError => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private
@@ -45,6 +53,7 @@ class Api::V1::RidesController < ApplicationController
 
     if active_ride
       render json: { errors: "You already have an active ride" }, status: :unprocessable_entity
+      return
     end
   end
 
@@ -53,6 +62,7 @@ class Api::V1::RidesController < ApplicationController
 
     unless @ride.rider_id == current_user.id
       render json: { errors: "Not authorized" }, status: :forbidden
+      return
     end
   end
 
