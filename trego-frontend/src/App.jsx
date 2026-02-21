@@ -1,14 +1,20 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Driver from "./pages/LoginDriver";
+import Rider from "./pages/LoginRider";
+
 function App() {
   return (
-    <div className="min-h-screen">
-      {/* Router will live here */}
-      <div className="bg-black text-white flex items-center justify-center min-h-screen">
-        <h1 className="text-4xl font-bold text-yellow-400">
-          Trego is Live 🚀
-        </h1>
+    <Router>
+      <div className="min-h-screen bg-black text-white">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/driver" element={<Driver />} />
+          <Route path="/rider" element={<Rider />} />
+        </Routes>
       </div>
-    </div>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
