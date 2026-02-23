@@ -1,20 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Driver from "./pages/LoginDriver";
-import Rider from "./pages/LoginRider";
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import Login from './pages/Login'
+import RiderHome from './pages/RiderHome'
+import BookRide from './pages/BookRide'
+import RideStatus from './pages/RideStatus'
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-black text-white">
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/driver" element={<Driver />} />
-          <Route path="/rider" element={<Rider />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<ProtectedRoute><RiderHome /></ProtectedRoute>} />
+          <Route path="/book" element={<ProtectedRoute><BookRide /></ProtectedRoute>} />
+          <Route path="/rides/:id" element={<ProtectedRoute><RideStatus /></ProtectedRoute>} />
         </Routes>
-      </div>
-    </Router>
-  );
+      </BrowserRouter>
+    </AuthProvider>
+  )
 }
 
 export default App;
