@@ -67,12 +67,14 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_02_122549) do
     t.integer "year"
     t.string "plate_number"
     t.bigint "driver_id"
-    t.boolean "active"
+    t.boolean "active", default: true
+    t.index ["driver_id"], name: "index_vehicles_on_driver_id"
+    t.index ["plate_number"], name: "index_vehicles_on_plate_number", unique: true
   end
 
-  add_foreign_key "rides", "cities", name: "fk_rails_rides_city_id"
+  add_foreign_key "rides", "cities"
   add_foreign_key "rides", "users", column: "driver_id"
   add_foreign_key "rides", "users", column: "rider_id"
-  add_foreign_key "users", "cities", name: "fk_rails_users_city_id"
-  add_foreign_key "vehicles", "users", column: "driver_id", name: "fk_rails_vehicles_driver_id"
+  add_foreign_key "users", "cities"
+  add_foreign_key "vehicles", "users", column: "driver_id"
 end
