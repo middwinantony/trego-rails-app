@@ -1,13 +1,23 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import Login from './pages/Login'
+import RiderHome from './pages/RiderHome'
+import BookRide from './pages/BookRide'
+import RideStatus from './pages/RideStatus'
+
 function App() {
   return (
-    <div className="min-h-screen">
-      {/* Router will live here */}
-      <div className="bg-black text-white flex items-center justify-center min-h-screen">
-        <h1 className="text-4xl font-bold text-yellow-400">
-          Trego is Live 🚀
-        </h1>
-      </div>
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<ProtectedRoute><RiderHome /></ProtectedRoute>} />
+          <Route path="/book" element={<ProtectedRoute><BookRide /></ProtectedRoute>} />
+          <Route path="/rides/:id" element={<ProtectedRoute><RideStatus /></ProtectedRoute>} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
